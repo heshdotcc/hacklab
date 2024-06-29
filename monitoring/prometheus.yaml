@@ -1,0 +1,54 @@
+server:
+  global:
+    scrape_interval: 15s
+  rule_files:
+    - /etc/prometheus/rules/*.yaml
+  scrape_configs:
+    - job_name: 'prometheus'
+      static_configs:
+        - targets: ['localhost:9090']
+    - job_name: 'node-exporter'
+      static_configs:
+        - targets: ['node-exporter:9100']
+    - job_name: 'kube-state-metrics'
+      static_configs:
+        - targets: ['kube-state-metrics:8080']
+    - job_name: 'nvidia-dcgm-exporter'
+      static_configs:
+        - targets: ['nvidia-dcgm-exporter:9400']
+
+alertmanager:
+  enabled: true
+  config:
+    global:
+      resolve_timeout: 5m
+    route:
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 3h
+      receiver: 'email-alerts'
+    receivers:
+      - name: 'email-alerts'
+        email_configs:
+          - to: '${RECIPIENT_EMAIL}'
+            from: '${SMTP_FROM}'
+            smarthost: '${SMTP_SMARTHOST}'
+            auth_username: '${SMTP_AUTH_USERNAME}'
+            auth_password: '${SMTP_AUTH_PASSWORD}'
+
+grafana:
+  enabled: true
+  admin:
+    existingSecret: grafana-admin-secret
+    passwordKey: admin-password
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: http://prometheus-server
+          access: proxy
+          isDefault: true
+

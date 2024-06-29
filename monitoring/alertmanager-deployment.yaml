@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager
+        args:
+        - --config.file=/etc/alertmanager/alertmanager.yml
+        - --storage.path=/alertmanager
+        env:
+        - name: SMTP_SMARTHOST
+          valueFrom:
+            secretKeyRef:
+              name: alertmanager-email-creds
+              key: smtp_smarthost
+        - name: SMTP_FROM
+          valueFrom:
+            secretKeyRef:
+              name: alertmanager-email-creds
+              key: smtp_from
+        - name: SMTP_AUTH_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: alertmanager-email-creds
+              key: smtp_auth_username
+        - name: SMTP_AUTH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: alertmanager-email-creds
+              key: smtp_auth_password
+        - name: RECIPIENT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: alertmanager-email-creds
+              key: recipient_email
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/alertmanager
+          subPath: alertmanager.yml
+      volumes:
+      - name: config-volume
+        configMap:
+          name: alertmanager-config
+
