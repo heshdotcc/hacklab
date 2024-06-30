@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jupyterhub-config
+  namespace: jupyterhub
+data:
+  jupyterhub_config.py: |
+    import os
+    c.JupyterHub.admin_access = True
+    c.JupyterHub.authenticator_class = 'jupyterhub.auth.DummyAuthenticator'
+    c.DummyAuthenticator.password = os.getenv('DUMMY_PASSWORD')
+

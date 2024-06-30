@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyterhub
+  namespace: jupyterhub
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyterhub
+  template:
+    metadata:
+      labels:
+        app: jupyterhub
+    spec:
+      containers:
+      - name: jupyterhub
+        image: jupyterhub/jupyterhub:latest
+        args: ["jupyterhub", "--config", "/etc/jupyterhub/jupyterhub_config.py"]
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DUMMY_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: jupyterhub-secret
+              key: jupyterhub-password
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/jupyterhub
+        - name: secret-volume
+          mountPath: /etc/secrets
+      volumes:
+      - name: config-volume
+        configMap:
+          name: jupyterhub-config
+      - name: secret-volume
+        secret:
+          secretName: jupyterhub-secret
+
