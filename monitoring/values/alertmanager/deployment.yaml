@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager
+        args:
+          - "--config.file=/etc/alertmanager/alertmanager.yaml"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/alertmanager
+        - name: secret-volume
+          mountPath: /etc/secrets
+      volumes:
+      - name: config-volume
+        configMap:
+          name: alertmanager-config
+      - name: secret-volume
+        secret:
+          secretName: alertmanager-email-secret
+
