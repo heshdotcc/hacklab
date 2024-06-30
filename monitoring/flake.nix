@@ -1,53 +1,30 @@
 {
   description = ''
-    A Nix flake for securely managing Kubernetes secrets for Grafana and Alertmanager, 
-    enabling configuration of SMTP credentials and recipient emails for alert notifications. 
+    A Nix flake for securely managing Kubernetes secrets for Grafana and Alertmanager,
+    enabling configuration of SMTP credentials and recipient emails for alert notifications.
     It simplifies secret management while allowing Kubernetes resources to be handled separately.
   '';
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    ownpkgs.url = "git+file:///home/he/ownpkgs";
     env.url = "git+file:///home/he/crypt";
   };
 
-  outputs = { self, nixpkgs, env }: {
-    packages = let
-      system = builtins.currentSystem;
-      pkgs = import nixpkgs { inherit system; };
-    in
-    {
-      grafanaSecret = pkgs.writeTextFile {
-        name = "grafana-admin-secret.yaml";
-        text = ''
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: grafana-admin-secret
-            namespace: default
-          type: Opaque
-          data:
-            admin-password: ${pkgs.lib.base64.encode env.infra.grafana}
-        '';
-      };
-
-      alertmanagerSecret = pkgs.writeTextFile {
-        name = "alertmanager-email-secret.yaml";
-        text = ''
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: alertmanager-email-creds
-            namespace: monitoring
-          type: Opaque
-          data:
-            smtp_smarthost: ${pkgs.lib.base64.encode env.infra.smarthost}
-            smtp_from: ${pkgs.lib.base64.encode env.infra.smtp_from}
-            smtp_auth_username: ${pkgs.lib.base64.encode env.infra.smtp_auth_username}
-            smtp_auth_password: ${pkgs.lib.base64.encode env.infra.smtp_auth_password}
-            recipient_email: ${pkgs.lib.base64.encode env.infra.recipient_email}
-        '';
-      };
+  outputs = { nixpkgs, ownpkgs, env, ... }: ownpkgs.lib.eachDefaultSystem (system:
+  let
+    pkgs = import nixpkgs { inherit system; overlays = [ ownpkgs.overlay ]; };
+    toBase64 = ownpkgs.toBase64;
+    secrets = import ./secrets.nix { inherit pkgs toBase64 env; };
+  in
+  {
+    devShell = pkgs.mkShell {
+      buildInputs = [ pkgs.coreutils ];
+      shellHook = ''
+        ${builtins.concatStringsSep "\n" (builtins.map (secret: ''
+          echo '${secret.content}' > values/${secret.name}
+        '') secrets)}
+      '';
     };
-  };
+  });
 }
-
