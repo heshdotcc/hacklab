@@ -7,7 +7,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    ownpkgs.url = "git+file:///home/he/ownpkgs";
+    ownpkgs.url = "github:heshdotcc/ownpkgs";
     env.url = "git+file:///home/he/crypt";
   };
 
