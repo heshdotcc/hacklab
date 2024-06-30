@@ -2,7 +2,8 @@
 
 [
   {
-    name = "grafana-admin-secret.yaml";
+    name = "secret.yaml";
+    path = "values/grafana";
     content = ''
       apiVersion: v1
       kind: Secret
@@ -15,7 +16,8 @@
     '';
   }
   {
-    name = "alertmanager-email-secret.yaml";
+    name = "secret.yaml";
+    path = "values/alertmanager";
     content = ''
       apiVersion: v1
       kind: Secret

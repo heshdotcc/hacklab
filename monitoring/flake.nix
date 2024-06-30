@@ -22,7 +22,7 @@
       buildInputs = [ pkgs.coreutils ];
       shellHook = ''
         ${builtins.concatStringsSep "\n" (builtins.map (secret: ''
-          echo '${secret.content}' > values/${secret.name}
+          echo -n '${secret.content}' > ${secret.path}/${secret.name}
         '') secrets)}
       '';
     };
