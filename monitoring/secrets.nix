@@ -14,7 +14,6 @@
         admin-password: ${toBase64 env.infra.grafana}
     '';
   }
-
   {
     name = "alertmanager-email-secret.yaml";
     content = ''
