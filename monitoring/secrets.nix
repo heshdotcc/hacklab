@@ -9,7 +9,7 @@
       kind: Secret
       metadata:
         name: grafana-admin-secret
-        namespace: default
+        namespace: monitoring 
       type: Opaque
       data:
         admin-password: ${toBase64 env.infra.grafana}
@@ -22,7 +22,7 @@
       apiVersion: v1
       kind: Secret
       metadata:
-        name: alertmanager-email-creds
+        name: alertmanager-email-secret
         namespace: monitoring
       type: Opaque
       data:
