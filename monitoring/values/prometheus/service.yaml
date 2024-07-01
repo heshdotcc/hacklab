@@ -8,18 +8,5 @@ spec:
     app: prometheus
   ports:
     - protocol: TCP
-      port: 80
+      port: 9090
       targetPort: 9090
-apiVersion: v1
-kind: Service
-metadata:
-  name: prometheus-server
-  namespace: monitoring
-spec:
-  selector:
-    app: prometheus
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 9090
-
