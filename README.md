@@ -1,6 +1,6 @@
 # Hacklab
 
-Self-hosted Kubernetes CDE for ML with GPU support, including JupyterHub, Monitoring, and a codespace service.
+Self-hosted Kubernetes CDE for ML with GPU support, including JupyterHub, Monitoring, and a codespace.
 
 ## Directory Structure
 ```
