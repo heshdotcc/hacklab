@@ -155,7 +155,7 @@ spec:
   restartPolicy: OnFailure
   runtimeClassName: nvidia
   containers:
-    - name: cuda-vector-add
+    - name: cuda-shell
       image: nvidia/cuda:12.4.0-base-ubuntu22.04
       command: ["/bin/sh", "-c", "while true; do sleep 30; done"]
       resources:
