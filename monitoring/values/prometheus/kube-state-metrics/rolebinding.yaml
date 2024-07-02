@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: kube-state-metrics-rolebinding
+  namespace: monitoring
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: monitoring
+roleRef:
+  kind: Role
+  name: kube-state-metrics-role
+  apiGroup: rbac.authorization.k8s.io
+
