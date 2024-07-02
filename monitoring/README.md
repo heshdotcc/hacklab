@@ -1,5 +1,6 @@
 # Monitoring with Prometheus, Grafana, and Alertmanager
-
+![image](https://github.com/heshdotcc/hacklab/assets/4110061/2fbfb000-1bf2-4071-973f-5a1d0642f552)
+<p align="center"><em>Granfa dashboard reporting <a href="https://github.com/NVIDIA/dcgm-exporter">NVIDIA Data Center GPU Manager (DCGM)</a> & <a href="https://github.com/kubernetes/kube-state-metrics">Kube State</a> exporters metrics</em></p>
 ## About
 This directory contains the Kubernetes YAML configurations to deploy Prometheus, Grafana, and Alertmanager.
 
