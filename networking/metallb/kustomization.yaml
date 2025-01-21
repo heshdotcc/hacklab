@@ -1,0 +1,24 @@
+namespace: metallb-system
+
+resources:
+  - github.com/metallb/metallb/config/native?ref=v0.14.9
+
+configMapGenerator:
+  - name: metallb-config
+    envs:
+      - .env
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+replacements:
+  - source:
+      kind: ConfigMap
+      name: metallb-config
+      fieldPath: data.ADDRESS_RANGE
+    targets:
+      - select:
+          kind: IPAddressPool
+        fieldPaths:
+          - spec.addresses[0]
+
