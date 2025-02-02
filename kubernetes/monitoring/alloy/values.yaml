@@ -1,0 +1,68 @@
+alloy:
+  configMap:
+    create: true
+    content: |-
+      logging {
+        level = "info"
+        format = "logfmt"
+      }
+
+      otelcol.receiver.loki "default" {
+        output {
+          logs = [otelcol.exporter.loki.default.input]
+        }
+      }
+
+      otelcol.exporter.loki "default" {
+        forward_to = [loki.write.default.receiver]
+      }
+
+      loki.write "default" {
+        endpoint {
+          url = "http://loki-gateway.monitoring.svc.cluster.local"
+        }
+      }
+
+      prometheus.scrape "default" {
+        targets = [{
+          __address__ = "prometheus-server.monitoring.svc.cluster.local:9090",
+        }]
+        forward_to = [prometheus.remote_write.default.receiver]
+      }
+
+      prometheus.remote_write "default" {
+        endpoint {
+          url = "http://prometheus-server.monitoring.svc.cluster.local:9090/api/v1/write"
+        }
+      }
+
+controller:
+  type: deployment
+  replicas: 1
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+service:
+  enabled: true
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  hosts:
+    - alloy.local
+
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClassName: local-path
+
+serviceMonitor:
+  enabled: true
