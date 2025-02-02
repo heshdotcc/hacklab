@@ -7,49 +7,23 @@ This directory contains the Kubernetes YAML configurations to deploy Prometheus,
 
 It also uses Nix with flakes to fetch utils & secrets from an external input to securely encode manifests.
 
+**Note: Secret management is beign moved into `kubernetes/security` and replaced by [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) and [External Secrets](https://github.com/external-secrets/external-secrets).**
+
 ## Tree
 ```
 .
-├── flake.lock
-├── flake.nix
-├── README.md
-├── secrets.nix
-└── values
-    ├── alertmanager
-    │   ├── configmap.yaml
-    │   ├── deployment.yaml
-    │   ├── secret.yaml
-    │   └── service.yaml
-    ├── grafana
-    │   ├── configmap.yaml
-    │   ├── deployment.yaml
-    │   ├── network-policy.yaml
-    │   ├── rolebinding.yaml
-    │   ├── role.yaml
-    │   ├── secret.yaml
-    │   └── service.yaml
-    └── prometheus
-        ├── configmap.yaml
-        ├── deployment.yaml
-        ├── kube-state-metrics
-        │   ├── clusterrolebinding.yaml
-        │   ├── clusterrole.yaml
-        │   ├── deployment.yaml
-        │   ├── rolebinding.yaml
-        │   ├── role.yaml
-        │   └── service.yaml
-        ├── node-exporter
-        │   ├── daemonset.yaml
-        │   ├── network-policy.yaml
-        │   └── service.yaml
-        ├── nvidia-dcgm-exporter
-        │   ├── daemonset.yaml
-        │   └── service.yaml
-        └── service.yaml
+├── alertmanager
+├── alloy
+├── grafana
+├── loki
+├── migrate
+└── prometheus
 ```
 This structure organizes the configuration files into directories for each component, making it easier to navigate and manage the setup.
 
 ## Components
+
+**Note: This section is being upgraded to its next version.**
 
 ### Alertmanager
 
