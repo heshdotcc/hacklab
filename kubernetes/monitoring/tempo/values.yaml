@@ -1,0 +1,38 @@
+extraEnvFrom:
+  - secretRef:
+      name: tempo-creds
+
+storage:
+  trace:
+    backend: s3
+    s3:
+      access_key: "{{ .Values.TEMPO_ACCESS_KEY }}"
+      secret_key: "{{ .Values.TEMPO_SECRET_KEY }}"
+      bucket: "{{ .Values.TEMPO_BUCKET }}"
+      endpoint: "{{ .Values.MINIO_SERVICE_HOST }}:{{ .Values.MINIO_SERVICE_PORT }}"
+      insecure: true
+
+minio:
+  enabled: false
+
+traces:
+  otlp:
+    grpc:
+      enabled: true
+    http:
+      enabled: true
+  zipkin:
+    enabled: false
+  jaeger:
+    thriftHttp:
+      enabled: false
+  opencensus:
+    enabled: false
+
+serviceMonitor:
+  enabled: true
+
+distributor:
+  config:
+    log_received_spans:
+      enabled: true
