@@ -3,24 +3,40 @@
 Self-hosted Kubernetes CDE for ML with GPU support, including JupyterHub, Monitoring, and a codespace.
 
 ## Directory Structure
+
+**Note: This project is being upgraded to its next version.**
+
 ```
 .
-├── jupyterhub
-│   ├── flake.nix
-│   ├── secrets.nix
-│   └── values
-│       ├── configmap.yaml
-│       ├── deployment.yaml
-│       └── services.yaml
-├── monitoring
-│   ├── flake.lock
-│   ├── flake.nix
-│   ├── README.md
-│   ├── secrets.nix
-│   └── values
-│       ├── alertmanager
-│       ├── grafana
-│       └── prometheus
+├── kubernetes
+│   ├── compute
+│   │   ├── kserve-inference
+│   │   └── nvidia-operator
+│   ├── monitoring
+│   │   ├── alertmanager
+│   │   ├── alloy
+│   │   ├── grafana
+│   │   ├── loki
+│   │   ├── prometheus
+│   │   ├── README.md
+│   ├── networking
+│   │   ├── istio
+│   │   ├── metallb
+│   │   ├── teleport
+│   │   └── wireguard
+│   ├── platform
+│   │   ├── codespace
+│   │   ├── gitlab
+│   │   └── jupyterhub
+│   ├── security
+│   │   ├── external-secrets
+│   │   └── sealed-secrets
+│   └── storage
+│       ├── kaniko
+│       ├── minio
+│       ├── registry
+│       └── volumes
+├── flake.nix
 └── README.md
 ```
 ### JupyterHub
