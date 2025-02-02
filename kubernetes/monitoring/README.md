@@ -17,7 +17,8 @@ It also uses Nix with flakes to fetch utils & secrets from an external input to 
 ├── grafana
 ├── loki
 ├── migrate
-└── prometheus
+├── prometheus
+└── tempo
 ```
 This structure organizes the configuration files into directories for each component, making it easier to navigate and manage the setup.
 
