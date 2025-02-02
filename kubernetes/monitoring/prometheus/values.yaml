@@ -1,0 +1,103 @@
+grafana:
+  enabled: false
+
+alertmanager:
+  enabled: false
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    retention: "30d"
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 50Gi
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    podMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelector: {}
+
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+    hosts:
+      - prometheus.local
+    paths:
+      - /
+    pathType: Prefix
+    # tls:
+    #   - secretName: prometheus-tls
+    #     hosts:
+    #       - prometheus.local
+
+  service:
+    type: ClusterIP
+    port: 9090
+    targetPort: 9090
+
+defaultRules:
+  create: true
+  rules:
+    alertmanager: false
+    etcd: true
+    general: true
+    k8s: true
+    kubeApiserver: true
+    kubePrometheusNodeAlerting: true
+    kubePrometheusNodeRecording: true
+    kubernetesAbsent: true
+    kubernetesApps: true
+    kubernetesResources: true
+    kubernetesStorage: true
+    kubernetesSystem: true
+    node: true
+    prometheus: true
+
+kubeStateMetrics:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+  resources:
+    limits:
+      cpu: 100m
+      memory: 200Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
+  securityContext:
+    runAsUser: 65534
+    runAsGroup: 65534
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+  hostNetwork: true
+  hostPID: true
+  serviceMonitor:
+    enabled: true
+
+prometheusOperator:
+  enabled: true
+  manageCrds: true
+  admissionWebhooks:
+    failurePolicy: Fail
+    patch:
+      enabled: true
+    createSecret: true
+
+additionalServiceMonitors:
+  - name: nvidia-dcgm-exporter
+    selector:
+      matchLabels:
+        app: nvidia-dcgm-exporter
+    namespaceSelector:
+      matchNames:
+        - gpu-operator
+    endpoints:
+      - port: 9400
+        interval: 15s
