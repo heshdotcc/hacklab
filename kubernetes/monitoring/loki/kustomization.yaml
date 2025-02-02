@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: monitoring
+
+secretGenerator:
+  - name: loki-secret
+    envs:
+      - .env
+    files:
+      - values.yaml
+    options:
+      disableNameSuffixHash: true
+
+helmCharts:
+  - name: loki
+    repo: https://grafana.github.io/helm-charts
+    version: 6.25.0
+    releaseName: loki
+    namespace: monitoring
+    valuesFile: values.yaml

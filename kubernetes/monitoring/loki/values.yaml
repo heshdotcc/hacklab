@@ -1,0 +1,101 @@
+loki:
+  extraArgs:
+    - -config.expand-env=true
+
+  commonConfig:
+    replication_factor: 1
+    ring:
+      kvstore:
+        store: memberlist
+
+  memberlist:
+    join_members:
+      - loki-memberlist.monitoring.svc.cluster.local:7946
+
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: s3
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  storage:
+    type: s3
+    bucketNames:
+      chunks: loki-data
+      ruler: loki-data
+      admin: loki-data
+    s3:
+      endpoint: http://loki:${MINIO_LOKI_PASSWORD}@minio.minio.svc.cluster.local:9000
+      insecure: true
+      s3forcepathstyle: true
+
+  limits_config:
+    retention_period: 720h
+    ingestion_rate_mb: 32
+    ingestion_burst_size_mb: 64
+    max_global_streams_per_user: 100000
+    max_query_parallelism: 32
+    max_entries_limit_per_query: 10000
+
+deploymentMode: SimpleScalable
+
+backend:
+  replicas: 1
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
+
+read:
+  replicas: 1
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
+
+write:
+  replicas: 1
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
+
+gateway:
+  enabled: true
+  replicas: 1
+
+persistence:
+  enabled: true
+  size: 50Gi
+  storageClassName: local-path
+
+minio:
+  enabled: false
+
+memcached:
+  enabled: true
+
+memcachedChunks:
+  enabled: true
+
+memcachedFrontend:
+  enabled: true
+
+memcachedIndexQueries:
+  enabled: true
+
+memcachedIndexWrites:
+  enabled: true
