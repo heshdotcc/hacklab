@@ -1,0 +1,71 @@
+mode: standalone
+
+existingSecret: minio-creds
+rootUserKey: rootUser
+rootPasswordKey: rootPassword
+
+persistence:
+  enabled: true
+  size: 100Gi
+  storageClassName: local-path
+
+resources:
+  requests:
+    memory: 4Gi
+    cpu: "2"
+  limits:
+    memory: 8Gi
+    cpu: "4"
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  path: /
+  hosts:
+    - minio.local
+
+consoleIngress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  path: /
+  hosts:
+    - console.minio.local
+
+buckets:
+  - name: loki-data
+    policy: none
+    purge: false
+    versioning: false
+
+policies:
+  - name: loki-policy
+    statements:
+      - resources:
+          - "arn:aws:s3:::loki-data/*"
+          - "arn:aws:s3:::loki-data"
+        actions:
+          - "s3:*"
+
+users:
+  - accessKey: loki
+    existingSecret: minio-creds
+    existingSecretKey: lokiPassword
+    secretKey: ${lokiPassword}"
+    policy: loki-policy
+
+service:
+  type: ClusterIP
+
+consoleService:
+  type: ClusterIP
+
+makeBucket:
+  enabled: true
+
+makeUser:
+  enabled: true
+
+makePolicy:
+  enabled: true
