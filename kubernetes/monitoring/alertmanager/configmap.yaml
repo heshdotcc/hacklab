@@ -16,9 +16,8 @@ data:
     receivers:
       - name: 'email-alerts'
         email_configs:
-          - to: '${RECIPIENT_EMAIL}'
-            from: '${SMTP_FROM}'
-            smarthost: '${SMTP_SMARTHOST}'
-            auth_username: '${SMTP_AUTH_USERNAME}'
-            auth_password: '${SMTP_AUTH_PASSWORD}'
-
+          - to: 'admin@example.com'
+            from: 'alerts@example.com'
+            smarthost: 'smtp.example.com:587'
+            auth_username: 'username'
+            auth_password: 'password'

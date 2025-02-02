@@ -8,7 +8,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     ownpkgs.url = "github:heshdotcc/ownpkgs";
-    env.url     = "github:heshdotcc/crypt";
+    #env.url     = "github:heshdotcc/crypt";
+    env.url     = "git+file:///home/he/Work/infra/k8s/crypt";
   };
 
   outputs = { nixpkgs, ownpkgs, env, ... }: ownpkgs.lib.eachDefaultSystem (system:
