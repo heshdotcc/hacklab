@@ -1,3 +1,4 @@
-**/*.env
+**/.env
 **/*secret.yaml
 **/*secrets.yaml
+**/*charts
