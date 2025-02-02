@@ -18,7 +18,7 @@ Self-hosted Kubernetes CDE for ML with GPU support, including JupyterHub, Monito
 │   │   ├── grafana
 │   │   ├── loki
 │   │   ├── prometheus
-│   │   ├── README.md
+│   │   └── tempo
 │   ├── networking
 │   │   ├── istio
 │   │   ├── metallb
