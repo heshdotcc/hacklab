@@ -1,0 +1,55 @@
+installCRDs: true
+
+global:
+  logLevel: 2
+  leaderElection:
+    namespace: "kube-system"
+
+# Increase for HA in production
+replicaCount: 1
+
+prometheus:
+  enabled: true
+  servicemonitor:
+    enabled: true
+    interval: 60s
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+securityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+
+webhook:
+  # Increase for HA in production
+  replicaCount: 1
+  timeoutSeconds: 30
+  hostNetwork: false
+  securePort: 10250
+  serviceType: ClusterIP
+
+startupapicheck:
+  enabled: true
+  timeout: 5m
+  backoffLimit: 10
+  extraArgs:
+    - -v=5
+
+cainjector:
+  enabled: true
+  # Increase for HA in production
+  replicaCount: 1

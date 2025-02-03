@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: security
+
+resources:
+  - cluster-issuer.yaml
+  - cluster-role.yaml
+  - cluster-role-binding.yaml
+
+helmCharts:
+  - name: cert-manager
+    repo: https://charts.jetstack.io
+    version: v1.16.3
+    releaseName: cert-manager
+    namespace: security
+    valuesFile: values.yaml
