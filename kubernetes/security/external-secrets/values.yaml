@@ -1,0 +1,57 @@
+installCRDs: true
+
+crds:
+  createClusterExternalSecret: true
+  createClusterSecretStore: true
+  createClusterGenerator: true
+  createPushSecret: true
+
+serviceAccount:
+  create: true
+  annotations: {}
+
+webhook:
+  create: true
+  certManager:
+    enabled: true
+    addInjectorAnnotations: true
+    cert:
+      create: true
+      duration: "8760h" # 1 year
+      issuerRef:
+        group: cert-manager.io
+        kind: ClusterIssuer
+        name: selfsigned-issuer
+  failurePolicy: Fail
+  hostNetwork: false
+  serviceType: ClusterIP
+  timeoutSeconds: 10
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+metrics:
+  service:
+    enabled: true
+    port: 8080
+
+serviceMonitor:
+  enabled: true
+  interval: 30s
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  enabled: true
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
