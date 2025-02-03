@@ -1,0 +1,88 @@
+global:
+  enabled: true
+  tlsDisable: true
+
+server:
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.18.4"
+
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
+
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+  livenessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true"
+    initialDelaySeconds: 60
+
+  # Use raft storage backend
+  standalone:
+    enabled: true # Standalone mode (non-HA)
+    config: |
+      ui = true
+
+      listener "tcp" {
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+        tls_disable = true
+      }
+
+      storage "raft" {
+        path = "/vault/data"
+      }
+
+      # Include the transit config from secret
+      ${file("/vault/transit-config/transit.hcl")}
+
+  dataStorage:
+    enabled: true
+    size: "10Gi"
+    storageClass: "local-path"
+
+  auditStorage:
+    enabled: true
+    size: "10Gi"
+    storageClass: "local-path"
+
+  service:
+    enabled: true
+    name: vault
+    port: 8200
+    targetPort: 8200
+    annotations: {}
+
+  ingress:
+    enabled: true
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: "web"
+      traefik.ingress.kubernetes.io/router.middlewares: "default-redirect-http@kubernetescrd"
+      traefik.ingress.kubernetes.io/service.serversscheme: "http"
+    ingressClassName: "traefik"
+    activeService: true
+    hosts:
+      - host: vault.local
+        paths:
+          - /
+    tls: []
+
+  extraVolumes:
+    - type: secret
+      name: vault-transit-config
+      path: /vault/transit-config
+
+ui:
+  enabled: true
+  serviceType: "ClusterIP"
+  externalPort: 8200
+  publishNotReadyAddresses: true
+
+injector:
+  enabled: false
