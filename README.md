@@ -29,6 +29,7 @@ Self-hosted Kubernetes CDE for ML with GPU support, including JupyterHub, Monito
 │   │   ├── gitlab
 │   │   └── jupyterhub
 │   ├── security
+│   │   ├── cert-manager
 │   │   ├── external-secrets
 │   │   └── sealed-secrets
 │   └── storage
