@@ -13,13 +13,14 @@
       in {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            openssl
+            docker
+            grml-zsh-config
             kubectl
             kubernetes-helm
-            docker
-            zsh 
-            grml-zsh-config
             kustomize
+            minio-client
+            openssl
+            zsh
           ];
 
           shellHook = ''           
