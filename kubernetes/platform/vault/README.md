@@ -92,7 +92,7 @@ Create the transit configuration secret:
 kubectl create secret generic vault-transit-config -n vault --from-file=transit.hcl=/dev/stdin <<EOF
 seal "transit" {
   address = "http://vault-primary.vault.svc.cluster.local:8200"
-  token = "hvs.<REDACTED>"  # Replace with token from step 2
+  token = "hvs.<REDACTED>"
   disable_renewal = "false"
   key_name = "autounseal"
   mount_path = "transit/"
