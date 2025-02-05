@@ -24,12 +24,3 @@ helmCharts:
           requests:
             cpu: 500m
             memory: 2048Mi
-
-  - name: gateway
-    repo: https://istio-release.storage.googleapis.com/charts
-    version: 1.24.2
-    releaseName: istio-ingress
-    namespace: istio-ingress
-    valuesInline:
-      service:
-        type: LoadBalancer
