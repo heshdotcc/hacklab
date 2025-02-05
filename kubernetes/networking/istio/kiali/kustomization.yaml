@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml
+
+helmCharts:
+  - name: kiali-operator
+    repo: https://kiali.org/helm-charts
+    version: 2.5.0
+    releaseName: kiali-operator
+    namespace: kiali-operator
+    includeCRDs: true
+    valuesInline:
+      cr:
+        create: true
+        namespace: istio-system
+        spec:
+          auth:
+            strategy: "anonymous"
+          deployment:
+            cluster_wide_access: true
+      debug:
+        enabled: true
+        verbosity: "1"
