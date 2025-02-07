@@ -1,0 +1,3 @@
+[submodule "kubernetes/platform/kubeflow/manifests"]
+	path = kubernetes/platform/kubeflow/manifests
+	url = https://github.com/kubeflow/manifests.git
