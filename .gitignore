@@ -2,3 +2,7 @@
 **/secret.yaml
 **/secrets.yaml
 **/*charts
+*.tfvars
+*.tfvars.json
+**/*.tfvars
+**/*.tfvars.json
